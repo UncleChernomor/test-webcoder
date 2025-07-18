@@ -1,0 +1,17 @@
+# Composer
+/vendor/
+composer.phar
+composer.lock
+
+# PHPStorm
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Linux specific
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
