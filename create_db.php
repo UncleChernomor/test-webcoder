@@ -1,8 +1,11 @@
 <?php
+require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/config/settings.php';
+
+use Chernomor\WebCoder\Database;
+
 try {
-    // Создаем соединение с SQLite
-    $pdo = new PDO('sqlite:'.DB_PATH);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo = Database::getInstance()->getConnection();
 
     // table departments exists
     $departmentTableExists = $pdo->query("SELECT name FROM sqlite_master WHERE type='table' AND name='department'")->fetch();
