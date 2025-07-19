@@ -26,7 +26,7 @@ $pdo = Database::getInstance()->getConnection();
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 // get static files (CSS, JS, image)
-if ( $uri !== '/' && file_exists(__DIR__.'/public'.$uri) ) {
+if ( $uri !== '/' && file_exists(__DIR__ . '/public' . $uri) ) {
     return false;
 }
 
