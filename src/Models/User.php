@@ -9,15 +9,16 @@ class User extends RootModel
 {
     public function __construct(
         public PDO $db,
-        protected ?int $id,
-        protected ?string $name,
-        protected string $email,
-        protected string $address,
-        protected string $phone,
-        protected string $comments,
-        protected int $departmentId
+        protected ?int $id = null,
+        protected ?string $name = null,
+        protected string $nameTable = 'user',
+        protected ?string $email = null,
+        protected ?string $address = null,
+        protected ?string $phone = null,
+        protected ?string $comments = null,
+        protected ?int $departmentId = null
     ) {
-        parent::__construct($db, $id, $name);
+        parent::__construct($db, $id, $name, $nameTable);;
     }
 
     public function getEmail(): string
@@ -70,6 +71,27 @@ class User extends RootModel
         $this->departmentId = $departmentId;
     }
 
+    public function validate(array $data): array
+    {
+        $errors = parent::validate($data);
+
+        if (isset($data['email']) && !empty($data['email'])) {
+            if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+                $errors['email'] = 'Invalid email format.';
+            }
+        }
+
+        if (isset($data['address']) && !empty($data['address'])) {
+
+        }
 
 
+        if (isset($data['phone']) && !empty($data['phone'])) {
+            if (!preg_match('/^\+?\d{7,15}$/', $data['phone'])) {
+                $errors['phone'] = 'Invalid phone number format.';
+            }
+        }
+
+        return  $errors;
+    }
 }
