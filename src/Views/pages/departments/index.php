@@ -5,6 +5,9 @@
                 <h1 class="display-4">List of Departments</h1>
                 <hr class="my-4">
                 <div class="mt-4">
+                    <?php if (!empty($error)): ?>
+                        <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
+                    <?php endif; ?>
                     <?php if (!empty($departments)): ?>
                         <?php foreach ($departments as $department): ?>
                             <div class="card mb-3">

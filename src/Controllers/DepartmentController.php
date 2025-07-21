@@ -35,6 +35,52 @@ class DepartmentController extends RootController
         $this->render('pages/departments/create');
     }
 
+    public function store(): void
+    {
+        $name = trim($_POST['name-department']) ?? null;
+
+        // min validation
+        if (!$name || mb_strlen($name) < 2 || mb_strlen($name) > 50) {
+            $this->render('pages/departments/create', [
+                "error" => "department's name must be between 2 and 50 characters."
+            ]);
+            return;
+        }
+        try {
+            $pdo = Database::getInstance()->getConnection();
+            $department = new Department($pdo, null, $name);
+            $department->save();
+
+            header('Location: /departments');
+            exit;
+        } catch (\Exception $e) {
+            error_log('Error from created department: ' . $e->getMessage());
+
+            $this->render('pages/departments/index', [
+                "error" => "We couldn't created Department. " . $e->getMessage()
+            ]);
+        }
+    }
+
+    public function delete(int $id): void
+    {
+        try {
+            $pdo = Database::getInstance()->getConnection();
+            $department = new Department($pdo, $id, null);
+            $department->delete();
+
+            header('Location: /departments');
+            exit;
+
+        } catch (\Exception $e) {
+            error_log('Error from deleted department: ' . $e->getMessage());
+
+            $this->render('pages/departments/index', [
+                "error" => "We couldn't delete Department. Try later."
+            ]);
+        }
+    }
+
     public function edit(int $id): void
     {
         $this->render("pages/departments/edit");

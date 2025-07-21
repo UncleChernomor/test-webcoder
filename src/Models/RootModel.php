@@ -53,47 +53,68 @@ abstract class RootModel
         $this->name = $name;
     }
 
-    /**
-     * Add a new entity
-     * @param array $params
-     * @return int $id
-     *
-     * @throws Exception
-     */
-    public function add(array $params): int
+    protected function getFields(): array
     {
-        if (empty($params)) {
-            throw new Exception("parametrs can't be empty");
+        // collected all properties except id, db, nameTable
+        $vars = get_object_vars($this);
+        unset($vars['id'], $vars['db'], $vars['nameTable']);
+        return $vars;
+    }
+
+    /**
+     * @return void
+     *
+     * @throws \PDOException
+     */
+    public function save(): void
+    {
+        if (empty($this->id)) {
+            $this->insert();
+        } else {
+            $this->update();
         }
+    }
 
-        try {
-            $columns = implode(', ', array_keys($params));
-            $placeholders = ':' . implode(', :', array_keys($params));
+    /**
+     * @return void
+     *
+     * @throws \PDOException
+     */
+    protected function insert(): void
+    {
+        $fields = $this->getFields();
+        $columns = implode(', ', array_keys($fields));
+        $placeholders = ':' . implode(', :', array_keys($fields));
 
-            $sql = "INSERT INTO {$this->nameTable} ({$columns}) VALUES ({$placeholders})";
+        $sql = "INSERT INTO {$this->nameTable} ($columns) VALUES ($placeholders)";
+        $stmt = $this->db->prepare($sql);
+        foreach ($fields as $key => $value) {
+            $stmt->bindValue(":$key", $value);
+        }
+        $stmt->execute();
+        $this->id = (int) $this->db->lastInsertId();
+    }
 
-            $stmt = $this->db->prepare($sql);
+    /**
+     * @return void
+     *
+     * @throws \PDOException
+     */
+    protected function update(): void
+    {
+        $fields = $this->getFields();
+        $set = implode(', ', array_map(fn($k) => "$k = :$k", array_keys($fields)));
 
-            foreach ($params as $key => $value) {
-                $stmt->bindValue(":{$key}", $value);
-            }
+        $sql = "UPDATE {$this->nameTable} SET $set WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        foreach ($fields as $key => $value) {
+            $stmt->bindValue(":$key", $value);
+        }
+        $stmt->bindValue(":id", $this->id, PDO::PARAM_INT);
+        $stmt->execute();
 
-            if (!$stmt->execute()) {
-                throw new Exception("Don't manage to execute query");
-            }
-
-            $newId = (int) $this->db->lastInsertId();
-
-            if ($newId === 0) {
-                throw new Exception(" Failed to get ID created record");
-            }
-
-            $this->id = $newId;
-
-            return $newId;
-
-        } catch (PDOException $e) {
-            throw new Exception("Error Database. Don't create record: " . $e->getMessage());
+        if ($stmt->rowCount() === 0) {
+            throw new \PDOException("Record with ID {$this->id} didn't found for update");
         }
     }
 
@@ -102,29 +123,17 @@ abstract class RootModel
      *
      * @throws Exception
      */
-    public function delete(int $id): void
+    public function delete(): void
     {
-        if ($id <= 0) {
-            throw new Exception("ID must be positive integer");
-        }
-
-        try {
             $sql = "DELETE FROM {$this->nameTable} WHERE id = :id";
 
             $stmt = $this->db->prepare($sql);
-            $stmt->bindValue(':id', $id, PDO::PARAM_INT);
-
-            if (!$stmt->execute()) {
-                throw new Exception("Don't manage to execute query");
-            }
+            $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
+            $stmt->execute();
 
             if ($stmt->rowCount() === 0) {
-                throw new Exception("Record with ID {$id} didn't found for delete");
+                throw new \PDOException("Record with ID {$this->id} didn't found for delete");
             }
-
-        } catch (PDOException $e) {
-            throw new Exception("Error Database can't delete record: " . $e->getMessage());
-        }
     }
 
     /**
