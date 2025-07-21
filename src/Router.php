@@ -29,10 +29,9 @@ class Router
                 '/departments/(\d+)/delete' => ['controller' => 'DepartmentController', 'action' => 'delete'],
             ]
         ];
-
     }
 
-    public function dispatch($uri)
+    public function dispatch($uri): void
     {
         $path = parse_url($uri, PHP_URL_PATH);
         $method = $_SERVER['REQUEST_METHOD'];
@@ -72,7 +71,7 @@ class Router
         $this->notFound();
     }
 
-    private function notFound():void
+    private function notFound(): void
     {
         http_response_code(404);
         echo 'Page not found';

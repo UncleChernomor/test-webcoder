@@ -1,4 +1,5 @@
 <?php
+
 define('DB_NAME', 'webcoder.sqlite');
 define('DB_HOST', 'localhost');
 define('DB_PORT', '3306');

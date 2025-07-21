@@ -1,4 +1,5 @@
 <?php
+
 require __DIR__ . '/vendor/autoload.php';
 require __DIR__ . '/config/settings.php';
 
@@ -8,28 +9,33 @@ try {
     $pdo = Database::getInstance()->getConnection();
 
     // table departments exists
-    $departmentTableExists = $pdo->query("SELECT name FROM sqlite_master WHERE type='table' AND name='department'")->fetch();
+    $departmentTableExists = $pdo->query(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name='department'"
+    )->fetch();
 
-    if ( ! $departmentTableExists) {
+    if (!$departmentTableExists) {
         // create a table department
-        $pdo->exec("
+        $pdo->exec(
+            "
             CREATE TABLE department (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT UNIQUE NOT NULL,
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP
             )
-        ");
-        echo "Table 'department' create successfully.".PHP_EOL;
+        "
+        );
+        echo "Table 'department' create successfully." . PHP_EOL;
     } else {
-        echo "Table 'department' is already exists.".PHP_EOL;
+        echo "Table 'department' is already exists." . PHP_EOL;
     }
 
     // Table user exists
     $userTableExists = $pdo->query("SELECT name FROM sqlite_master WHERE type='table' AND name='user'")->fetch();
 
-    if ( ! $userTableExists) {
+    if (!$userTableExists) {
         // create a table user
-        $pdo->exec("
+        $pdo->exec(
+            "
             CREATE TABLE user (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 email TEXT UNIQUE NOT NULL,
@@ -41,10 +47,11 @@ try {
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (department_id) REFERENCES department(id)
             )
-        ");
-        echo "Table 'user' created successfully.".PHP_EOL;
+        "
+        );
+        echo "Table 'user' created successfully." . PHP_EOL;
     } else {
-        echo "Table 'users' is already exists.".PHP_EOL;
+        echo "Table 'users' is already exists." . PHP_EOL;
     }
 
     // Add basis departments, if the table department is empty
@@ -63,13 +70,12 @@ try {
         foreach ($departments as $department) {
             $stmt->execute([$department]);
         }
-        echo "Basis departments add to table departments".PHP_EOL;
+        echo "Basis departments add to table departments" . PHP_EOL;
     }
 
-    echo "Database is ready: ".DB_PATH.PHP_EOL;
-
+    echo "Database is ready: " . DB_PATH . PHP_EOL;
 } catch (PDOException $e) {
-    echo "Error while working with database: ".$e->getMessage().PHP_EOL;
+    echo "Error while working with database: " . $e->getMessage() . PHP_EOL;
 }
 
 

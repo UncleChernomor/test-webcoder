@@ -1,21 +1,21 @@
 {
-    "name": "chernomor/web-coder",
-    "description": "test task",
-    "type": "project",
-    "autoload": {
-        "psr-4": {
-            "Chernomor\\WebCoder\\": "src/"
-        }
-    },
-    "authors": [
-        {
-            "name": "UncleChernomor",
-            "email": "xchernomor@gmail.com"
-        }
-    ],
-    "minimum-stability": "dev",
-    "require": {
-        "php": "^8.0",
-        "ext-pdo": "*"
+  "name": "chernomor/web-coder",
+  "description": "test task",
+  "type": "project",
+  "autoload": {
+    "psr-4": {
+      "Chernomor\\WebCoder\\": "src/"
     }
+  },
+  "authors": [
+    {
+      "name": "UncleChernomor",
+      "email": "xchernomor@gmail.com"
+    }
+  ],
+  "minimum-stability": "dev",
+  "require": {
+    "php": "^8.0",
+    "ext-pdo": "*"
+  }
 }
