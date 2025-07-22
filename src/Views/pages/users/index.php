@@ -1,3 +1,12 @@
+<?php
+
+$departmentsName = [];
+if (!empty($departments)) {
+    foreach ($departments as $department) {
+        $departmentsName[$department['id']] = $department['name'];
+    }
+}
+?>
 <div class="container">
     <div class="row">
         <div class="col-12">
@@ -5,28 +14,54 @@
                 <h1 class="display-4">List of Users</h1>
                 <hr class="my-4">
                 <div class="mt-4">
-                    <?php if (!empty($error)): ?>
+                    <?php
+                    if (!empty($error)): ?>
                         <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
-                    <?php endif; ?>
-                    <?php if (!empty($users)): ?>
-                        <?php foreach ($users as $user): ?>
+                    <?php
+                    endif; ?>
+                    <div class="card mb-3">
+                        <div class="card-body d-flex justify-content-between align-items-center">
+                            <span class="h5 mb-0 text-primary">User name</span>
+                            <span class="h5 mb-0 text-primary">Department ID</span>
+                            <span class="h5 mb-0 text-primary">&nbsp;</span>
+                            <span class="h5 mb-0 text-primary">&nbsp;</span>
+                        </div>
+                    </div>
+                    <?php
+                    if (!empty($users)): ?>
+                        <?php
+                        foreach ($users as $user): ?>
                             <div class="card mb-3">
                                 <div class="card-body d-flex justify-content-between align-items-center">
-                                    <a href="/users/<?php echo $user['id']; ?>"><span class="h5 mb-0"><?php echo htmlspecialchars($user['name']); ?></span></a>
+                                    <a href="/users/<?php
+                                    echo $user['id']; ?>"><span class="h5 mb-0"><?php
+                                            echo htmlspecialchars($user['name']); ?></span></a>
+                                    <?php
+                                    if (!empty($departmentsName[$user['department_id']])): ?>
+                                        <span class="h5 mb-0 text-primary"><?= $departmentsName[$user['department_id']]; ?></span>
+                                    <?php
+                                    endif; ?>
                                     <div>
-                                        <a href="/users/<?php echo $user['id']; ?>/edit" class="btn btn-warning btn-sm mr-2">Change</a>
-                                        <form method="post" action="/users/<?php echo $user['id']; ?>/delete" style="display:inline;" onsubmit="return confirm('Are you sure?');">
-                                            <input type="hidden" name="id" value="<?php echo $user['id']; ?>">
+                                        <a href="/users/<?php
+                                        echo $user['id']; ?>/edit" class="btn btn-warning btn-sm mr-2 disabled">Change</a>
+                                        <form method="post" action="/users/<?php
+                                        echo $user['id']; ?>/delete" style="display:inline;"
+                                              onsubmit="return confirm('Are you sure?');">
+                                            <input type="hidden" name="id" value="<?php
+                                            echo $user['id']; ?>">
                                             <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                                         </form>
 
                                     </div>
                                 </div>
                             </div>
-                        <?php endforeach; ?>
-                    <?php else: ?>
+                        <?php
+                        endforeach; ?>
+                    <?php
+                    else: ?>
                         <p>There aren't users to show.</p>
-                    <?php endif; ?>
+                    <?php
+                    endif; ?>
 
                     <a class="btn btn-outline-light btn-lg" href="/users/create" role="button">Add new</a>
                 </div>

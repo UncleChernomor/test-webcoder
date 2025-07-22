@@ -37,7 +37,7 @@ class DepartmentController extends RootController
 
     public function store(): void
     {
-        $name = trim($_POST['name-department']) ?? null;
+        $name = trim(filter_var($_POST['name-department'] ?? '', FILTER_SANITIZE_STRING)) ?? null;
 
         // min validation
         if (!$name || mb_strlen($name) < 2 || mb_strlen($name) > 50) {
@@ -46,6 +46,7 @@ class DepartmentController extends RootController
             ]);
             return;
         }
+
         try {
             $pdo = Database::getInstance()->getConnection();
             $department = new Department($pdo, null, $name);

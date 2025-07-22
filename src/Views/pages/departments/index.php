@@ -14,7 +14,7 @@
                                 <div class="card-body d-flex justify-content-between align-items-center">
                                     <a href="/departments/<?php echo $department['id']; ?>"><span class="h5 mb-0"><?php echo htmlspecialchars($department['name']); ?></span></a>
                                     <div>
-                                        <a href="/departments/<?php echo $department['id']; ?>/edit" class="btn btn-warning btn-sm mr-2">Change</a>
+                                        <a href="/departments/<?php echo $department['id']; ?>/edit" class="btn btn-warning btn-sm mr-2 disabled">Change</a>
                                         <form method="post" action="/departments/<?php echo $department['id']; ?>/delete" style="display:inline;" onsubmit="return confirm('Are you sure?');">
                                             <input type="hidden" name="id" value="<?php echo $department['id']; ?>">
                                             <button type="submit" class="btn btn-danger btn-sm">Delete</button>
