@@ -45,7 +45,7 @@ try {
                 comments TEXT,
                 department_id INTEGER NOT NULL,
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (department_id) REFERENCES department(id)
+                FOREIGN KEY (department_id) REFERENCES department(id) ON DELETE RESTRICT
             )
         "
         );

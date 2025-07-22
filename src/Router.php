@@ -4,32 +4,30 @@ namespace Chernomor\WebCoder;
 
 class Router
 {
-    private $routes = [];
+    private $routes = [
+        'GET' => [
+            '/' => ['controller' => 'HomeController', 'action' => 'index'],
+            '/users' => ['controller' => 'UserController', 'action' => 'index'],
+            '/users/create' => ['controller' => 'UserController', 'action' => 'create'],
+            '/users/(\d+)' => ['controller' => 'UserController', 'action' => 'show'],
+            '/users/(\d+)/edit' => ['controller' => 'UserController', 'action' => 'edit'],
+            '/departments' => ['controller' => 'DepartmentController', 'action' => 'index'],
+            '/departments/create' => ['controller' => 'DepartmentController', 'action' => 'create'],
+            '/departments/(\d+)' => ['controller' => 'DepartmentController', 'action' => 'show'],
+            '/departments/(\d+)/edit' => ['controller' => 'DepartmentController', 'action' => 'edit'],
+        ],
+        'POST' => [
+            '/users' => ['controller' => 'UserController', 'action' => 'store'],
+            '/users/(\d+)' => ['controller' => 'UserController', 'action' => 'update'],
+            '/users/(\d+)/delete' => ['controller' => 'UserController', 'action' => 'delete'],
+            '/departments' => ['controller' => 'DepartmentController', 'action' => 'store'],
+            '/departments/(\d+)' => ['controller' => 'DepartmentController', 'action' => 'update'],
+            '/departments/(\d+)/delete' => ['controller' => 'DepartmentController', 'action' => 'delete'],
+        ]
+    ];
 
     public function __construct()
-    {
-        $this->routes = [
-            'GET' => [
-                '/' => ['controller' => 'HomeController', 'action' => 'index'],
-                '/users' => ['controller' => 'UserController', 'action' => 'index'],
-                '/users/create' => ['controller' => 'UserController', 'action' => 'create'],
-                '/users/(\d+)' => ['controller' => 'UserController', 'action' => 'show'],
-                '/users/(\d+)/edit' => ['controller' => 'UserController', 'action' => 'edit'],
-                '/departments' => ['controller' => 'DepartmentController', 'action' => 'index'],
-                '/departments/create' => ['controller' => 'DepartmentController', 'action' => 'create'],
-                '/departments/(\d+)' => ['controller' => 'DepartmentController', 'action' => 'show'],
-                '/departments/(\d+)/edit' => ['controller' => 'DepartmentController', 'action' => 'edit'],
-            ],
-            'POST' => [
-                '/users' => ['controller' => 'UserController', 'action' => 'store'],
-                '/users/(\d+)' => ['controller' => 'UserController', 'action' => 'update'],
-                '/users/(\d+)/delete' => ['controller' => 'UserController', 'action' => 'delete'],
-                '/departments' => ['controller' => 'DepartmentController', 'action' => 'store'],
-                '/departments/(\d+)' => ['controller' => 'DepartmentController', 'action' => 'update'],
-                '/departments/(\d+)/delete' => ['controller' => 'DepartmentController', 'action' => 'delete'],
-            ]
-        ];
-    }
+    {}
 
     public function dispatch($uri): void
     {

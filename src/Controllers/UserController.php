@@ -84,8 +84,32 @@ class UserController extends RootController
         $this->render('pages/users/edit', ['id' => $id]);
     }
 
-    public function show(int $id): void
+    public function show($id): void
     {
-        $this->render('pages/users/show', ['id' => $id]);
+        $id = filter_var($id ?? 0, FILTER_VALIDATE_INT);
+
+        $user = new User(Database::getInstance()->getConnection());
+
+
+        $this->render('pages/users/show', ['user' => $user->getById($id)]);
+    }
+
+    public function delete(int $id): void
+    {
+        try {
+            $pdo = Database::getInstance()->getConnection();
+            $user = new User($pdo, $id, null);
+            $user->delete();
+
+            header('Location: /users');
+            exit;
+
+        } catch (\Exception $e) {
+            error_log('Error from deleted department: ' . $e->getMessage());
+
+            $this->render('pages/users/index', [
+                "error" => "We couldn't delete Users. Try later."
+            ]);
+        }
     }
 }
